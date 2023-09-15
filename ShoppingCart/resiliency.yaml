@@ -1,0 +1,21 @@
+﻿apiVersion: dapr.io/v1alpha1
+kind: Resiliency
+metadata:
+  name: my-app-config
+spec:
+  httpPort: 1923    
+  appPort: 1881     
+  components:
+    - name: statestore
+      type: state.redis
+      metadata:
+        host: localhost
+        port: 6379    
+    - name: pubsub
+      type: pubsub.redis
+      metadata:
+        host: localhost
+        port: 6379    
+  tracing:
+    enabled: true
+    samplingRate: "1.0"
