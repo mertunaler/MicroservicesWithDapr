@@ -52,8 +52,16 @@ namespace ShoppingCart.Services
                     Price = grossTotal.ToString("F2"),
                     UserID = userID
                 };
-                await _daprClient.PublishEventAsync("pubSub", "dapr.Payment", integrationEvent);
+
+                var response = _daprClient.InvokeMethodAsync<PaymentRequestedIntegrationEvent>(HttpMethod.Post, "payment-service", "HandlePayment", integrationEvent);
+
+                if (response.IsCompletedSuccessfully)
+                {
+                    Console.WriteLine("PaymentSuccesfull..");
+                    await _daprClient.PublishEventAsync("puSsub", "shipment", new ShipmentRequestedIntegrationEvent() { Address = "HOME", UserID = userID });
+                }
             }
+
 
         }
     }
